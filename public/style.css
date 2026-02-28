@@ -74019,3 +74019,11 @@ button:hover {
     transition: all 0.3s ease-in-out;
     transform: scale(1.02);
 }
+
+
+/* Button hover enhancement */
+
+button:hover {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1.05);
+}
