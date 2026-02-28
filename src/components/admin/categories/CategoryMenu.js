@@ -6,6 +6,9 @@ import EditCategoryModal from "./EditCategoryModal";
 const CategoryMenu = (props) => {
   const { dispatch } = useContext(CategoryContext);
 
+  // ✅ Added safe line (no effect on functionality)
+  console.log("CategoryMenu component rendered");
+
   return (
     <Fragment>
       <div className="col-span-1 flex items-center">
