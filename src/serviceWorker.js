@@ -115,10 +115,18 @@ export function unregister() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
             .then(registration => {
-                registration.unregister();
+                registration.unregister().then(success => {
+                    if (success) {
+                        console.log('[ServiceWorker] Successfully unregistered.');
+                    } else {
+                        console.warn('[ServiceWorker] Unregistration failed.');
+                    }
+                });
             })
             .catch(error => {
-                console.error(error.message);
+                console.error('[ServiceWorker] Unregister error:', error.message);
             });
+    } else {
+        console.info('[ServiceWorker] Service workers are not supported in this browser.');
     }
 }
