@@ -14,8 +14,6 @@ function App() {
         <
         Routes / >
         <
-        /LayoutContext.Provider> <
-        /Fragment>
     );
 }
 
