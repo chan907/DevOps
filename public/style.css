@@ -74027,3 +74027,10 @@ button:hover {
     transition: all 0.3s ease-in-out;
     transform: scale(1.05);
 }
+
+
+/* Slight hover lift effect for better user interaction */
+
+button:hover {
+    transform: translateY(-2px);
+}
