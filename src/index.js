@@ -13,4 +13,9 @@ ReactDOM.render( <
     document.getElementById("root")
 );
 
-serviceWorker.unregister();
+// Register service worker only in production environment
+if (process.env.NODE_ENV === "production") {
+    serviceWorker.register();
+} else {
+    serviceWorker.unregister();
+}
