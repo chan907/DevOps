@@ -5,15 +5,12 @@ import EditCategoryModal from "./EditCategoryModal";
 
 const CategoryMenu = (props) => {
   const { dispatch } = useContext(CategoryContext);
-
-  // ✅ Added safe line (no effect on functionality)
   console.log("CategoryMenu component rendered");
 
   return (
     <Fragment>
       <div className="col-span-1 flex items-center">
         <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center w-full">
-          {/* It's open the add category modal */}
           <div
             style={{ background: "#303031" }}
             onClick={(e) =>
@@ -34,7 +31,7 @@ const CategoryMenu = (props) => {
               />
             </svg>
             Add Category
-          </div>
+          </div><div></div>
         </div>
         <AddCategoryModal />
         <EditCategoryModal />

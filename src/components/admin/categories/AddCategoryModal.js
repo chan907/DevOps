@@ -9,14 +9,6 @@ const AddCategoryModal = (props) => {
     <div className={`bg-${type}-200 py-2 px-4 w-full`}>{msg}</div>
   );
 
-  const [fData, setFdata] = useState({
-    cName: "",
-    cDescription: "",
-    cImage: "",
-    cStatus: "Active",
-    success: false,
-    error: false,
-  });
 
   const fetchData = async () => {
     let responseData = await getAllCategory();
