@@ -77,4 +77,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 - v1.5 – Structured data implemented
 
 echo "test change" 
-Testing auto trigger
+
+echo "trigger check" 
