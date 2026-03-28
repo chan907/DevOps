@@ -1,58 +1,88 @@
 # BF-Fabric — Full Stack E-Commerce Application
 
-A production-ready full-stack e-commerce web application built with **React** (frontend) and **Node.js/Express** (backend), using **MongoDB** as the database. Includes an admin panel, user dashboard, cart, wishlist, checkout with Braintree payments, and a complete CI/CD pipeline.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-16.13-blue?logo=react" />
+  <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js" />
+  <img src="https://img.shields.io/badge/MongoDB-6.0-brightgreen?logo=mongodb" />
+  <img src="https://img.shields.io/badge/Docker-Compose-blue?logo=docker" />
+  <img src="https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-black?logo=github" />
+</p>
+
+A production-ready full-stack e-commerce web application built with **React** (frontend) and **Node.js/Express** (backend), using **MongoDB** as the database. The project includes a complete shopping experience — product browsing, cart, wishlist, checkout with Braintree payments, an admin panel, and a full CI/CD pipeline with Docker and GitHub Actions.
 
 ---
 
 ## 📋 Table of Contents
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Running the App](#running-the-app)
-- [Seed Data](#seed-data)
-- [Docker Setup](#docker-setup)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [API Endpoints](#api-endpoints)
-- [Login Credentials](#login-credentials)
-- [Version History](#version-history)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Running the App](#-running-the-app)
+- [Dataset & Images](#-dataset--images)
+- [Seed Data](#-seed-data)
+- [Docker Setup](#-docker-setup)
+- [CI/CD Pipeline](#-cicd-pipeline)
+- [API Endpoints](#-api-endpoints)
+- [Version History](#-version-history)
 
 ---
 
 ## ✨ Features
 
-### Shop (Customer)
-- Browse products by category or price filter
-- Product detail page with image slider, reviews & ratings
-- Add to cart / wishlist
-- Checkout with Braintree payment gateway (Sandbox)
+### 🛍️ Shop (Customer)
+- Browse all products on homepage with grid layout
+- Filter products by category or price range
+- Product detail page with image gallery, description, reviews & star ratings
+- Add to cart / remove from cart
+- Add to wishlist / remove from wishlist
+- Checkout with **Braintree** payment gateway (Sandbox mode)
 - Order history in user dashboard
-- User profile & password management
-- Login / Signup with JWT authentication
+- User profile management (name, email, address)
+- Change password from dashboard
+- Login / Signup with **JWT** authentication
+- Protected routes (cart & checkout require login)
 
-### Admin Panel
-- Dashboard with sales overview
-- Manage categories (add, edit, delete with image upload)
-- Manage products (add, edit, delete with 2 image upload)
-- Manage orders (update status, delete)
-- Customize homepage slider images
+### 🔧 Admin Panel
+- Dashboard with total sales, orders, products, categories overview
+- Manage **Categories** — add, edit, delete with image upload
+- Manage **Products** — add, edit, delete with 2-image upload, price, offer, quantity
+- Manage **Orders** — view all orders, update status (Pending → Processing → Shipped → Delivered), delete
+- **Customize** homepage slider images
+- Admin-only protected routes
+
+### 🖼️ Product Images
+- Real product images sourced from the **Apparel Images Dataset** (Kaggle)
+- 25 products across 4 categories with 2 images each (50 product images total)
+- Images organized by type: shirts, pants, shorts, dresses, shoes
+- Automatic image copy script (`copyImages.js`) to populate uploads from dataset
+
+### 🎨 UI/UX
+- Fully responsive design (mobile, tablet, desktop)
+- Fixed-height product cards — uniform grid layout regardless of image dimensions
+- Smooth hover zoom effect on product images
+- Loading spinner while fetching products
+- Tailwind CSS utility classes for styling
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 16, React Router v5, Bootstrap 4, Axios |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Auth | JWT (jsonwebtoken), bcryptjs |
-| Payments | Braintree (Sandbox) |
-| File Upload | Multer |
-| Containerization | Docker, Docker Compose |
-| CI/CD | GitHub Actions, Jenkins |
+| Layer | Technology | Version |
+|---|---|---|
+| Frontend | React | 16.13.1 |
+| Frontend Routing | React Router DOM | v5 |
+| Frontend Styling | Tailwind CSS, Bootstrap | 4.5 |
+| HTTP Client | Axios | 1.6.3 |
+| Backend | Node.js + Express.js | 18+ / 4.17 |
+| Database | MongoDB + Mongoose | 6.0 / 5.9 |
+| Authentication | JWT (jsonwebtoken) + bcryptjs | — |
+| Payments | Braintree (Sandbox) | 3.0 |
+| File Upload | Multer | 1.4 |
+| Dev Server | Nodemon | 2.0 |
+| Containerization | Docker + Docker Compose | — |
+| CI/CD | GitHub Actions + Jenkins | — |
 
 ---
 
@@ -60,46 +90,54 @@ A production-ready full-stack e-commerce web application built with **React** (f
 
 ```
 BF-Fabric/
-├── src/                          # React frontend
+├── public/
+│   ├── index.html                # HTML entry point
+│   └── style.css
+├── src/                          # React frontend source
 │   ├── components/
-│   │   ├── admin/                # Admin panel components
-│   │   │   ├── categories/       # Category management
-│   │   │   ├── dashboardAdmin/   # Admin dashboard & customize
-│   │   │   ├── orders/           # Order management
-│   │   │   └── products/         # Product management
-│   │   └── shop/                 # Customer-facing components
+│   │   ├── admin/                # Admin panel
+│   │   │   ├── categories/       # Category CRUD UI
+│   │   │   ├── dashboardAdmin/   # Admin dashboard, sales cards, customize
+│   │   │   ├── layout/           # Admin layout wrapper
+│   │   │   ├── orders/           # Order management UI
+│   │   │   ├── partials/         # Admin navbar, sidebar, footer
+│   │   │   └── products/         # Product CRUD UI
+│   │   └── shop/                 # Customer-facing UI
 │   │       ├── auth/             # Login, Signup, Protected routes
+│   │       ├── blog/             # Blog page
+│   │       ├── contact/          # Contact page
 │   │       ├── dashboardUser/    # User profile, orders, settings
-│   │       ├── home/             # Homepage, product grid, slider
+│   │       ├── home/             # Homepage, product grid, category filter, slider
+│   │       ├── layout/           # Shop layout wrapper
 │   │       ├── order/            # Checkout page
 │   │       ├── partials/         # Navbar, Footer, Cart modal
-│   │       ├── productDetails/   # Product detail page & reviews
+│   │       ├── productDetails/   # Product detail page, reviews
 │   │       └── wishlist/         # Wishlist page
-│   ├── App.js
-│   └── index.js
+│   ├── App.js                    # Routes definition
+│   └── index.js                  # React entry point
 ├── server/                       # Express backend
 │   ├── config/
-│   │   ├── db.js                 # MongoDB connection (legacy)
-│   │   ├── function.js           # Helper functions
+│   │   ├── db.js                 # MongoDB connection
+│   │   ├── function.js           # Helper utilities
 │   │   ├── keys.js               # JWT secret config
-│   │   └── uploadFolderCreateScript.js
-│   ├── controller/               # Route handler logic
+│   │   └── uploadFolderCreateScript.js  # Auto-create upload dirs
+│   ├── controller/               # Business logic
 │   │   ├── auth.js               # Signup, Signin
 │   │   ├── braintree.js          # Payment token & processing
 │   │   ├── categories.js         # Category CRUD
 │   │   ├── customize.js          # Slider image management
 │   │   ├── orders.js             # Order CRUD
-│   │   ├── products.js           # Product CRUD, reviews
-│   │   └── users.js              # User profile, password
+│   │   ├── products.js           # Product CRUD, reviews, filters
+│   │   └── users.js              # User profile, password change
 │   ├── middleware/
-│   │   └── auth.js               # JWT auth, isAdmin middleware
+│   │   └── auth.js               # JWT auth middleware, isAdmin check
 │   ├── models/                   # Mongoose schemas
-│   │   ├── categories.js
-│   │   ├── customize.js
-│   │   ├── orders.js
-│   │   ├── products.js
-│   │   └── users.js
-│   ├── routes/                   # Express routers
+│   │   ├── categories.js         # Category schema
+│   │   ├── customize.js          # Customize/slider schema
+│   │   ├── orders.js             # Order schema
+│   │   ├── products.js           # Product schema with reviews
+│   │   └── users.js              # User schema with roles
+│   ├── routes/                   # Express route definitions
 │   │   ├── auth.js
 │   │   ├── braintree.js
 │   │   ├── categories.js
@@ -107,19 +145,25 @@ BF-Fabric/
 │   │   ├── orders.js
 │   │   ├── products.js
 │   │   └── users.js
-│   ├── public/uploads/           # Uploaded images (auto-created)
-│   │   ├── products/
-│   │   ├── categories/
-│   │   └── customize/
+│   ├── public/
+│   │   └── uploads/              # Uploaded & seeded images (auto-created)
+│   │       ├── products/         # Product images (50 images)
+│   │       ├── categories/       # Category images (4 images)
+│   │       └── customize/        # Slider images
 │   ├── app.js                    # Express app entry point
 │   ├── seed.js                   # Database seed script
+│   ├── copyImages.js             # Copy dataset images into project
+│   ├── generateImages.js         # Download images from Unsplash (fallback)
 │   └── package.json
-├── .github/workflows/
-│   └── ci.yml                    # GitHub Actions CI/CD
-├── Dockerfile                    # Multi-stage Docker build
+├── .github/
+│   └── workflows/
+│       └── ci.yml                # GitHub Actions CI/CD pipeline
+├── Dockerfile                    # Docker build config
 ├── docker-compose.yml            # App + MongoDB services
-├── Jenkinsfile                   # Jenkins pipeline
+├── Jenkinsfile                   # Jenkins pipeline config
+├── .env                          # Frontend env (REACT_APP_API_URL)
 ├── .env.example                  # Environment variable template
+├── .gitignore
 └── package.json                  # Frontend dependencies
 ```
 
@@ -129,9 +173,12 @@ BF-Fabric/
 
 ### Prerequisites
 
-- Node.js 18+
-- MongoDB (local install or Docker)
-- Git
+Make sure you have the following installed:
+
+- [Node.js 18+](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.com/try/download/community) (local) or use Docker
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/) *(optional, for containerized setup)*
 
 ### 1. Clone the repository
 
@@ -146,20 +193,40 @@ cd DevOps
 cp .env.example server/.env
 ```
 
-Edit `server/.env` and fill in your values (see [Environment Variables](#environment-variables)).
+Edit `server/.env` with your values (see [Environment Variables](#-environment-variables)).
 
 ### 3. Install dependencies
 
 ```bash
-# Frontend
+# Install frontend dependencies
 npm install
 
-# Backend
+# Install backend dependencies
 cd server
 npm install
 ```
 
-### 4. Seed the database
+### 4. Set up product images
+
+**Option A — Use the Kaggle dataset (recommended):**
+
+1. Download the dataset from: https://www.kaggle.com/datasets/trolukovich/apparel-images-dataset
+2. Extract it to your `Downloads` folder as `archive (5)`
+3. Run the copy script:
+
+```bash
+cd server
+node copyImages.js
+```
+
+**Option B — Download from Unsplash (fallback):**
+
+```bash
+cd server
+node generateImages.js
+```
+
+### 5. Seed the database
 
 ```bash
 cd server
@@ -170,13 +237,19 @@ npm run seed
 
 ## 🔐 Environment Variables
 
-Create `server/.env` based on `.env.example`:
+### Frontend — `.env` (root)
+
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+### Backend — `server/.env`
 
 ```env
 PORT=8000
 DATABASE=mongodb://localhost:27017/bffabric
 
-JWT_SECRET=your_random_secret_key
+JWT_SECRET=your_random_secret_key_here
 
 BRAINTREE_MERCHANT_ID=your_merchant_id
 BRAINTREE_PUBLIC_KEY=your_public_key
@@ -185,82 +258,138 @@ BRAINTREE_PRIVATE_KEY=your_private_key
 REACT_APP_API_URL=http://localhost:8000
 ```
 
-| Variable | Description |
-|---|---|
-| `PORT` | Backend server port (default: 8000) |
-| `DATABASE` | MongoDB connection string |
-| `JWT_SECRET` | Secret key for signing JWT tokens |
-| `BRAINTREE_MERCHANT_ID` | Braintree sandbox merchant ID |
-| `BRAINTREE_PUBLIC_KEY` | Braintree sandbox public key |
-| `BRAINTREE_PRIVATE_KEY` | Braintree sandbox private key |
-| `REACT_APP_API_URL` | Backend URL used by React frontend |
+| Variable | Description | Required |
+|---|---|---|
+| `PORT` | Backend server port | Yes |
+| `DATABASE` | MongoDB connection string | Yes |
+| `JWT_SECRET` | Secret key for signing JWT tokens (use a long random string) | Yes |
+| `BRAINTREE_MERCHANT_ID` | Braintree sandbox merchant ID | Yes (for payments) |
+| `BRAINTREE_PUBLIC_KEY` | Braintree sandbox public key | Yes (for payments) |
+| `BRAINTREE_PRIVATE_KEY` | Braintree sandbox private key | Yes (for payments) |
+| `REACT_APP_API_URL` | Backend base URL used by React | Yes |
 
-> Get Braintree sandbox credentials free at https://sandbox.braintreegateway.com
+> Get free Braintree sandbox credentials at https://sandbox.braintreegateway.com
 
 ---
 
 ## ▶️ Running the App
 
-### Without Docker
+### Option 1 — Manual (Development)
 
-**Terminal 1 — Backend:**
+**Terminal 1 — Start Backend:**
 ```bash
 cd server
-npm run start:dev
+npm run start:dev     # with auto-reload (nodemon)
+# or
+npm start             # without auto-reload
 ```
 
-**Terminal 2 — Frontend:**
+**Terminal 2 — Start Frontend:**
 ```bash
 npm start
 ```
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8000 |
 
-### With Docker
+### Option 2 — Docker (Production-like)
 
 ```bash
 docker-compose up --build
 ```
 
-App available at http://localhost:8000
+| Service | URL |
+|---|---|
+| App | http://localhost:8000 |
+| MongoDB | mongodb://localhost:27017 |
+
+> Note: With Docker, only the backend runs in the container. Run the frontend separately with `npm start`.
+
+---
+
+## 🖼️ Dataset & Images
+
+This project uses real product images from the **Apparel Images Dataset** available on Kaggle.
+
+### Dataset Details
+
+| Property | Value |
+|---|---|
+| Source | https://www.kaggle.com/datasets/trolukovich/apparel-images-dataset |
+| Total Images | ~11,000 |
+| Categories | 24 clothing folders |
+| Format | JPG |
+
+### Dataset Folder → Product Mapping
+
+| Dataset Folder | Product Name | Category |
+|---|---|---|
+| `white_shirt` | White Cotton Shirt | Men |
+| `blue_shirt` | Blue Cotton Shirt | Men |
+| `black_shirt` | Black Cotton Shirt | Men |
+| `green_shirt` | Green Cotton Shirt | Men |
+| `black_pants` | Black Formal Pants | Men |
+| `blue_pants` | Blue Denim Pants | Men |
+| `brown_pants` | Brown Chino Pants | Men |
+| `green_pants` | Green Cargo Pants | Men |
+| `red_pants` | Red Slim Pants | Men |
+| `white_pants` | White Linen Pants | Men |
+| `black_shorts` | Black Sports Shorts | Men |
+| `blue_shorts` | Blue Casual Shorts | Men |
+| `brown_shorts` | Brown Shorts | Men |
+| `green_shorts` | Green Shorts | Men |
+| `white_shorts` | White Shorts | Men |
+| `black_dress` | Black Evening Dress | Women |
+| `blue_dress` | Blue Summer Dress | Women |
+| `red_dress` | Red Party Dress | Women |
+| `white_dress` | White Casual Dress | Women |
+| `black_shoes` | Black Formal Shoes | Shoes |
+| `blue_shoes` | Blue Sneakers | Shoes |
+| `brown_shoes` | Brown Leather Shoes | Shoes |
+| `green_shoes` | Green Casual Shoes | Shoes |
+| `red_shoes` | Red Sports Shoes | Shoes |
+| `white_shoes` | White Sneakers | Shoes |
+
+### How to Re-populate Images
+
+```bash
+cd server
+node copyImages.js
+```
+
+This copies 2 images per product (50 total) + 4 category images into `server/public/uploads/`.
 
 ---
 
 ## 🌱 Seed Data
 
-The seed script populates the database with sample data:
+The seed script populates MongoDB with all categories and products:
 
 ```bash
 cd server
 npm run seed
 ```
 
-This creates:
-- **2 users** (1 admin, 1 customer)
-- **4 categories** — Men, Women, Kids, Fabric
-- **10 products** across all categories
+### What gets seeded
 
-### Login Credentials (after seeding)
-
-| Role | Email | Password |
+| Type | Count | Details |
 |---|---|---|
-| Admin | admin@bffabric.com | admin123 |
-| Customer | customer@bffabric.com | customer123 |
+| Categories | 4 | Men, Women, Kids, Shoes |
+| Products | 25 | 15 Men + 4 Women + 6 Shoes |
 
-> To create your own admin: set `userRole: 1` in `server/seed.js` or directly in the database.
+> Note: The seed script does **not** delete or modify existing user accounts. Only categories and products are reset.
+
+### Re-seeding
+
+You can safely re-run `npm run seed` at any time. It clears only categories and products, then re-inserts fresh data.
 
 ---
 
 ## 🐳 Docker Setup
 
-### Start MongoDB only
-
-```bash
-docker run -d --name mongodb -p 27017:27017 mongo:6
-```
-
-### Start full stack
+### Start full stack with Docker Compose
 
 ```bash
 docker-compose up --build
@@ -272,7 +401,22 @@ docker-compose up --build
 docker-compose down
 ```
 
-> After restarting your PC, run `docker start mongodb` to bring MongoDB back up.
+### Start only MongoDB via Docker
+
+```bash
+docker run -d --name mongodb -p 27017:27017 mongo:6
+```
+
+### Docker Compose Services
+
+| Service | Image | Port |
+|---|---|---|
+| app | Built from Dockerfile | 8000 |
+| mongo | mongo:6 | 27017 |
+
+### Persistent Data
+
+MongoDB data is stored in a named Docker volume `mongo-data` so data persists across container restarts.
 
 ---
 
@@ -280,89 +424,126 @@ docker-compose down
 
 ### GitHub Actions (`.github/workflows/ci.yml`)
 
-Runs automatically on every push and pull request to `main`:
+Triggers on every **push** and **pull request** to `main`:
 
 | Job | Steps |
 |---|---|
-| Frontend | Install → Test → Build → Upload artifact |
-| Backend | Install → Validate |
-| Docker | Build image (on `main` branch only) |
+| Frontend Build | Checkout → Install → Build → Upload artifact |
+| Backend Validate | Checkout → Install → Validate |
+| Docker Build | Build image (on `main` branch push only) |
 
 ### Jenkins (`Jenkinsfile`)
 
-Self-hosted pipeline with stages:
-1. Install Frontend Dependencies
-2. Install Backend Dependencies
-3. Build Frontend (`npm run build`)
-4. Test Frontend
-5. Docker Build
-6. Deploy (`docker-compose up`)
+Self-hosted Jenkins pipeline with the following stages:
+
+| Stage | Description |
+|---|---|
+| Install Frontend | `npm install` in root |
+| Install Backend | `npm install` in `server/` |
+| Build Frontend | `npm run build` |
+| Test Frontend | `npm test` |
+| Docker Build | `docker build` |
+| Deploy | `docker-compose up -d` |
 
 ---
 
 ## 📡 API Endpoints
 
+Base URL: `http://localhost:8000/api`
+
 ### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/signup` | Register new user |
-| POST | `/api/signin` | Login |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/signup` | Register new user | No |
+| POST | `/signin` | Login, returns JWT | No |
 
 ### Products
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/product/all-product` | Get all products |
-| POST | `/api/product/single-product` | Get single product |
-| POST | `/api/product/add-product` | Add product (admin) |
-| POST | `/api/product/edit-product` | Edit product (admin) |
-| POST | `/api/product/delete-product` | Delete product (admin) |
-| POST | `/api/product/product-by-category` | Filter by category |
-| POST | `/api/product/product-by-price` | Filter by price |
-| POST | `/api/product/cart-product` | Get cart products |
-| POST | `/api/product/wish-product` | Get wishlist products |
-| POST | `/api/product/add-review` | Add review |
-| POST | `/api/product/delete-review` | Delete review |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/product/all-product` | Get all products | No |
+| POST | `/product/single-product` | Get single product by ID | No |
+| POST | `/product/add-product` | Add new product | Admin |
+| POST | `/product/edit-product` | Edit product | Admin |
+| POST | `/product/delete-product` | Delete product | Admin |
+| POST | `/product/product-by-category` | Filter products by category | No |
+| POST | `/product/product-by-price` | Filter products by price range | No |
+| POST | `/product/cart-product` | Get products by IDs (cart) | No |
+| POST | `/product/wish-product` | Get products by IDs (wishlist) | No |
+| POST | `/product/add-review` | Add review to product | User |
+| POST | `/product/delete-review` | Delete review | User |
 
 ### Categories
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/category/all-category` | Get all categories |
-| POST | `/api/category/add-category` | Add category (admin) |
-| POST | `/api/category/edit-category` | Edit category (admin) |
-| POST | `/api/category/delete-category` | Delete category (admin) |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/category/all-category` | Get all categories | No |
+| POST | `/category/add-category` | Add category with image | Admin |
+| POST | `/category/edit-category` | Edit category | Admin |
+| POST | `/category/delete-category` | Delete category | Admin |
 
 ### Orders
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/order/get-all-orders` | Get all orders (admin) |
-| POST | `/api/order/order-by-user` | Get orders by user |
-| POST | `/api/order/create-order` | Create order |
-| POST | `/api/order/update-order` | Update order status (admin) |
-| POST | `/api/order/delete-order` | Delete order (admin) |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/order/get-all-orders` | Get all orders | Admin |
+| POST | `/order/order-by-user` | Get orders by user ID | User |
+| POST | `/order/create-order` | Create new order | User |
+| POST | `/order/update-order` | Update order status | Admin |
+| POST | `/order/delete-order` | Delete order | Admin |
 
 ### Users
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/user/signle-user` | Get user by ID |
-| POST | `/api/user/edit-user` | Update profile |
-| POST | `/api/user/change-password` | Change password |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/user/signle-user` | Get user profile by ID | User |
+| POST | `/user/edit-user` | Update user profile | User |
+| POST | `/user/change-password` | Change password | User |
 
 ### Payments
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/braintree/get-token` | Get Braintree client token |
-| POST | `/api/braintree/payment` | Process payment |
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/braintree/get-token` | Get Braintree client token | User |
+| POST | `/braintree/payment` | Process payment | User |
+
+### Customize
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/customize/get-customize` | Get slider images | No |
+| POST | `/customize/add-customize` | Add slider image | Admin |
+| POST | `/customize/delete-customize` | Delete slider image | Admin |
 
 ---
 
 ## 📝 Version History
 
-| Version | Changes |
-|---|---|
-| v1.0 | Initial release |
-| v1.1 | SEO meta tags added |
-| v1.2 | Title & favicon updated |
-| v1.3 | Google Fonts integrated |
-| v1.4 | Loading placeholder added |
-| v1.5 | Structured data implemented |
-| v2.0 | Full DevOps overhaul — Docker, CI/CD, bug fixes, ₹ currency, UX improvements, seed data, security fixes |
+| Version | Date | Changes |
+|---|---|---|
+| v1.0 | — | Initial release — basic e-commerce with React + Node |
+| v1.1 | — | SEO meta tags added |
+| v1.2 | — | Title & favicon updated |
+| v1.3 | — | Google Fonts integrated |
+| v1.4 | — | Loading placeholder added |
+| v1.5 | — | Structured data (JSON-LD) implemented |
+| v2.0 | — | Full DevOps overhaul — Docker, CI/CD, bug fixes, ₹ currency, UX improvements, seed data, security fixes |
+| v3.0 | 2026 | Real dataset images (Kaggle Apparel Dataset), 25 products across 4 categories, fixed product card alignment, uniform image grid, image copy automation script, detailed README |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature/your-feature-name`
+3. Make your changes
+4. Commit: `git commit -m "feat: describe your change"`
+5. Push: `git push origin feature/your-feature-name`
+6. Open a Pull Request to `main`
+
+---
+
+## 📄 License
+
+This project is for educational purposes.

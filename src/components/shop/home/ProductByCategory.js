@@ -56,13 +56,15 @@ const AllProduct = ({ products }) => {
           products.map((item, index) => {
             return (
               <Fragment key={index}>
-                <div className="relative col-span-1 m-2">
-                  <img
-                    onClick={(e) => history.push(`/products/${item._id}`)}
-                    className="w-full object-cover object-center cursor-pointer"
-                    src={`${apiURL}/uploads/products/${item.pImages[0]}`}
-                    alt=""
-                  />
+                <div className="relative col-span-1 m-2 flex flex-col">
+                  <div className="w-full h-56 md:h-64 overflow-hidden bg-gray-100">
+                    <img
+                      onClick={(e) => history.push(`/products/${item._id}`)}
+                      className="w-full h-full object-cover object-center cursor-pointer hover:scale-105 transition-transform duration-300"
+                      src={`${apiURL}/uploads/products/${item.pImages[0]}`}
+                      alt={item.pName}
+                    />
+                  </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="text-gray-600 font-light truncate">
                       {item.pName}
@@ -89,7 +91,7 @@ const AllProduct = ({ products }) => {
                       </span>
                     </div>
                   </div>
-                  <div>₹{item.pPrice}.00</div>
+                  <div className="text-gray-800 font-medium mt-1">₹{item.pPrice}.00</div>
                   <div className="absolute top-0 right-0 mx-2 my-2 md:mx-4">
                     <svg
                       className="w-5 h-5 md:w-6 md:h-6 cursor-pointer text-yellow-700"
