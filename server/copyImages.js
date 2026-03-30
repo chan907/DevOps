@@ -46,13 +46,6 @@ const map = [
   ["blue_dress",   "p_women_dress_blue_1.jpg",  "p_women_dress_blue_2.jpg"],
   ["red_dress",    "p_women_dress_red_1.jpg",   "p_women_dress_red_2.jpg"],
   ["white_dress",  "p_women_dress_white_1.jpg", "p_women_dress_white_2.jpg"],
-  // Shoes
-  ["black_shoes",  "p_shoes_black_1.jpg",       "p_shoes_black_2.jpg"],
-  ["blue_shoes",   "p_shoes_blue_1.jpg",        "p_shoes_blue_2.jpg"],
-  ["brown_shoes",  "p_shoes_brown_1.jpg",       "p_shoes_brown_2.jpg"],
-  ["green_shoes",  "p_shoes_green_1.jpg",       "p_shoes_green_2.jpg"],
-  ["red_shoes",    "p_shoes_red_1.jpg",         "p_shoes_red_2.jpg"],
-  ["white_shoes",  "p_shoes_white_1.jpg",       "p_shoes_white_2.jpg"],
 ];
 
 for (const [folder, name1, name2] of map) {
@@ -65,6 +58,5 @@ for (const [folder, name1, name2] of map) {
 copy(getImages("blue_shirt",  1)[0], "men.jpg",   DEST_CATEGORIES);
 copy(getImages("red_dress",   1)[0], "women.jpg", DEST_CATEGORIES);
 copy(getImages("blue_shorts", 1)[0], "kids.jpg",  DEST_CATEGORIES);
-copy(getImages("white_shoes", 1)[0], "shoes.jpg", DEST_CATEGORIES);
 
 console.log("\n✅ All images copied!");

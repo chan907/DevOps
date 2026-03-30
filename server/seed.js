@@ -19,10 +19,9 @@ const seed = async () => {
     { cName: "Men",   cDescription: "Men's clothing and accessories", cImage: "men.jpg",   cStatus: "Active" },
     { cName: "Women", cDescription: "Women's clothing and accessories", cImage: "women.jpg", cStatus: "Active" },
     { cName: "Kids",  cDescription: "Kids clothing and accessories",  cImage: "kids.jpg",  cStatus: "Active" },
-    { cName: "Shoes", cDescription: "Footwear for all",               cImage: "shoes.jpg", cStatus: "Active" },
   ]);
 
-  const [men, women, kids, shoes] = categories;
+  const [men, women, kids] = categories;
 
   const products = [
     // ── Men Shirts ──────────────────────────────────────────────────────────
@@ -48,13 +47,6 @@ const seed = async () => {
     { pName: "Blue Summer Dress",   pDescription: "Light and breezy blue summer dress for casual outings.",        pPrice: 1499, pQuantity: 30, pCategory: women._id, pImages: ["p_women_dress_blue_1.jpg",  "p_women_dress_blue_2.jpg"],  pOffer: "20", pStatus: "Active" },
     { pName: "Red Party Dress",     pDescription: "Stunning red party dress that makes you stand out.",            pPrice: 2999, pQuantity: 15, pCategory: women._id, pImages: ["p_women_dress_red_1.jpg",   "p_women_dress_red_2.jpg"],   pOffer: "5",  pStatus: "Active" },
     { pName: "White Casual Dress",  pDescription: "Simple and elegant white dress for everyday wear.",             pPrice: 1299, pQuantity: 25, pCategory: women._id, pImages: ["p_women_dress_white_1.jpg", "p_women_dress_white_2.jpg"], pOffer: "15", pStatus: "Active" },
-    // ── Shoes ───────────────────────────────────────────────────────────────
-    { pName: "Black Formal Shoes",  pDescription: "Premium black leather formal shoes for office and events.",     pPrice: 1999, pQuantity: 30, pCategory: shoes._id, pImages: ["p_shoes_black_1.jpg",  "p_shoes_black_2.jpg"],  pOffer: "10", pStatus: "Active" },
-    { pName: "Blue Sneakers",       pDescription: "Trendy blue sneakers for casual and sports wear.",              pPrice: 1499, pQuantity: 40, pCategory: shoes._id, pImages: ["p_shoes_blue_1.jpg",   "p_shoes_blue_2.jpg"],   pOffer: "5",  pStatus: "Active" },
-    { pName: "Brown Leather Shoes", pDescription: "Classic brown leather shoes with durable sole.",               pPrice: 2199, pQuantity: 20, pCategory: shoes._id, pImages: ["p_shoes_brown_1.jpg",  "p_shoes_brown_2.jpg"],  pOffer: "0",  pStatus: "Active" },
-    { pName: "Green Casual Shoes",  pDescription: "Comfortable green casual shoes for daily use.",                 pPrice: 1299, pQuantity: 25, pCategory: shoes._id, pImages: ["p_shoes_green_1.jpg",  "p_shoes_green_2.jpg"],  pOffer: "15", pStatus: "Active" },
-    { pName: "Red Sports Shoes",    pDescription: "High performance red sports shoes for running and gym.",        pPrice: 1799, pQuantity: 35, pCategory: shoes._id, pImages: ["p_shoes_red_1.jpg",    "p_shoes_red_2.jpg"],    pOffer: "10", pStatus: "Active" },
-    { pName: "White Sneakers",      pDescription: "Clean white sneakers that go with any outfit.",                 pPrice: 1599, pQuantity: 45, pCategory: shoes._id, pImages: ["p_shoes_white_1.jpg",  "p_shoes_white_2.jpg"],  pOffer: "20", pStatus: "Active" },
   ];
 
   await productModel.insertMany(products);
