@@ -24,10 +24,10 @@ services:
     environment:
       - PORT=8000
       - DATABASE=mongodb://mongo:27017/ecommerce
-      - JWT_SECRET=${JWT_SECRET}
-      - BRAINTREE_MERCHANT_ID=${BRAINTREE_MERCHANT_ID}
-      - BRAINTREE_PUBLIC_KEY=${BRAINTREE_PUBLIC_KEY}
-      - BRAINTREE_PRIVATE_KEY=${BRAINTREE_PRIVATE_KEY}
+      - JWT_SECRET=demo_jwt_secret
+      - BRAINTREE_MERCHANT_ID=demo_merchant_id
+      - BRAINTREE_PUBLIC_KEY=demo_public_key
+      - BRAINTREE_PRIVATE_KEY=demo_private_key
     depends_on:
       - mongo
     restart: unless-stopped
