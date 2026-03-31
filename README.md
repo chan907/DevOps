@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/MongoDB-6.0-brightgreen?logo=mongodb" />
   <img src="https://img.shields.io/badge/Docker-Compose-blue?logo=docker" />
   <img src="https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-black?logo=github" />
+  <img src="https://img.shields.io/badge/Jenkins-Docker-red?logo=jenkins" />
 </p>
 
 A production-ready full-stack e-commerce web application built with **React** (frontend) and **Node.js/Express** (backend), using **MongoDB** as the database. The project includes a complete shopping experience — product browsing, cart, wishlist, checkout with Braintree payments, an admin panel, and a full CI/CD pipeline with Docker and GitHub Actions.
@@ -82,7 +83,7 @@ A production-ready full-stack e-commerce web application built with **React** (f
 | File Upload | Multer | 1.4 |
 | Dev Server | Nodemon | 2.0 |
 | Containerization | Docker + Docker Compose | — |
-| CI/CD | GitHub Actions + Jenkins | — |
+| CI/CD | GitHub Actions + Jenkins (Docker) | — |
 
 ---
 
@@ -411,8 +412,9 @@ docker run -d --name mongodb -p 27017:27017 mongo:6
 
 | Service | Image | Port |
 |---|---|---|
-| app | Built from Dockerfile | 8000 |
-| mongo | mongo:6 | 27017 |
+| app | Built from Dockerfile | 8002 |
+| mongo | mongo:6 | internal only |
+| jenkins | Custom (Dockerfile.jenkins) | 8081 |
 
 ### Persistent Data
 
@@ -434,7 +436,9 @@ Triggers on every **push** and **pull request** to `main`:
 
 ### Jenkins (`Jenkinsfile`)
 
-Self-hosted Jenkins pipeline with the following stages:
+Jenkins runs inside Docker (Linux container) with Node.js, Docker CLI and docker-compose pre-installed via `Dockerfile.jenkins`.
+
+**Jenkins URL:** http://localhost:8081
 
 | Stage | Description |
 |---|---|
@@ -442,8 +446,18 @@ Self-hosted Jenkins pipeline with the following stages:
 | Install Backend | `npm install` in `server/` |
 | Build Frontend | `npm run build` |
 | Test Frontend | `npm test` |
-| Docker Build | `docker build` |
-| Deploy | `docker-compose up -d` |
+| Docker Build | `docker build -t devops-app .` |
+| Deploy | `docker-compose up -d app mongo` |
+
+**To start Jenkins:**
+```bash
+docker-compose up -d jenkins
+```
+
+**Get initial admin password:**
+```bash
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
 
 ---
 
@@ -530,6 +544,7 @@ Base URL: `http://localhost:8000/api`
 | v1.5 | — | Structured data (JSON-LD) implemented |
 | v2.0 | — | Full DevOps overhaul — Docker, CI/CD, bug fixes, ₹ currency, UX improvements, seed data, security fixes |
 | v3.0 | 2026 | Real dataset images (Kaggle Apparel Dataset), 25 products across 4 categories, fixed product card alignment, uniform image grid, image copy automation script, detailed README |
+| v4.0 | 2026 | Jenkins moved to Docker container, custom Dockerfile.jenkins with Node.js + Docker CLI + docker-compose, fixed project name in docker-compose, .dockerignore added, app running on port 8002 |
 
 ---
 
