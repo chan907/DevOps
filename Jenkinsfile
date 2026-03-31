@@ -8,39 +8,39 @@ pipeline {
     stages {
         stage('Install Frontend Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Install Backend Dependencies') {
             steps {
                 dir('server') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
 
         stage('Build Frontend') {
             steps {
-                sh 'npm run build'
+                bat 'npm run build'
             }
         }
 
         stage('Test Frontend') {
             steps {
-                sh 'npm test -- --passWithNoTests --watchAll=false'
+                bat 'npm test -- --passWithNoTests --watchAll=false'
             }
         }
 
         stage('Docker Build & Push') {
             steps {
-                sh 'docker build -t devops-app .'
+                bat 'docker build -t devops-app .'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker-compose up -d --build'
+                bat 'docker-compose up -d --build'
             }
         }
     }
