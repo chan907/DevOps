@@ -170,9 +170,15 @@ BF-Fabric/
 
 ---
 
-## ⚡ Quick Start (From Scratch)
+## ⚡ Quick Start (Any Device)
 
-This is the complete step-by-step guide to get everything running from zero.
+This is the complete step-by-step guide to get everything running from zero on any device.
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Git](https://git-scm.com/downloads)
+
+> No Node.js or MongoDB installation needed — Docker handles everything.
 
 ### Step 1 — Clone the repo
 
@@ -181,60 +187,73 @@ git clone https://github.com/chan907/DevOps.git
 cd DevOps
 ```
 
-### Step 2 — Start Jenkins with Docker Compose
+### Step 2 — Start all containers
 
 ```bash
-docker-compose up -d jenkins
+docker compose up --build -d
 ```
 
-### Step 3 — Get Jenkins Admin Password
+This starts 3 containers:
+- `mongo` → MongoDB database
+- `app` → React + Node.js app on port 8002
+- `jenkins` → Jenkins CI/CD on port 8081
+
+### Step 3 — Seed the database
+
+```bash
+docker exec devops-app-app-1 node seed.js
+```
+
+### Step 4 — Access the app
+
+| Service | URL |
+|---|---|
+| App | http://localhost:8002 |
+| Jenkins | http://localhost:8081 |
+
+### Step 5 — Jenkins Setup (First Time Only)
 
 ```bash
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-### Step 4 — Setup Jenkins
-
-1. Open http://localhost:8081
-2. Paste the password from Step 3
-3. Click **Install suggested plugins**
-4. Create your admin user
-
-### Step 5 — Add GitHub Credentials
-
-1. Go to **Manage Jenkins** → **Credentials** → **System** → **Global** → **Add Credentials**
-2. Kind: `Username with password`
-3. Username: your GitHub username
-4. Password: your GitHub token
-5. ID: `github-credentials`
-6. Click **Save**
-
-### Step 6 — Create Pipeline
-
-1. Click **New Item**
-2. Name: `devops-app` → Select **Pipeline** → **OK**
-3. Scroll to **Pipeline** section:
+1. Open http://localhost:8081 and paste the password
+2. Click **Install suggested plugins**
+3. Create your admin user
+4. Go to **Manage Jenkins** → **Credentials** → **Add Credentials**
+   - Kind: `Username with password`
+   - Username: your GitHub username
+   - Password: your GitHub token
+   - ID: `github-credentials`
+5. Click **New Item** → Name: `devops-app` → **Pipeline** → **OK**
+6. Pipeline section:
    - Definition: `Pipeline script from SCM`
    - SCM: `Git`
    - Repository URL: `https://github.com/chan907/DevOps.git`
-   - Credentials: `github-credentials`
    - Branch: `*/main`
    - Script Path: `Jenkinsfile`
-4. Click **Save**
+7. Click **Save** → **Build Now**
 
-### Step 7 — Set Executors
+> **Every time you push code to GitHub**, click **Build Now** in Jenkins to rebuild and redeploy.
 
-1. Go to **Manage Jenkins** → **Nodes** → **Built-In Node** → **Configure**
-2. Set **Number of executors** to `2`
-3. Click **Save**
+### Useful Commands
 
-### Step 8 — Build & Deploy
+```bash
+# Stop all containers
+docker compose down
 
-1. Click **Build Now**
-2. Wait for the pipeline to complete (~3-5 mins first time)
-3. App will be live at **http://localhost:8002** ✅
+# Start again without rebuilding
+docker compose up -d
 
-> **Every time you push code to GitHub**, just click **Build Now** in Jenkins to rebuild and redeploy.
+# Rebuild after code changes
+docker compose up --build -d
+
+# View app logs
+docker compose logs -f app
+
+# Remove stopped containers
+docker container prune -f
+```
 
 ---
 
@@ -366,15 +385,19 @@ npm start
 ### Option 2 — Docker (Production-like)
 
 ```bash
-docker-compose up --build
+docker compose up --build -d
 ```
 
 | Service | URL |
 |---|---|
-| App | http://localhost:8000 |
-| MongoDB | mongodb://localhost:27017 |
+| App (React + Node) | http://localhost:8002 |
+| Jenkins | http://localhost:8081 |
+| MongoDB | internal only (mongo:27017) |
 
-> Note: With Docker, only the backend runs in the container. Run the frontend separately with `npm start`.
+Seed the database after first run:
+```bash
+docker exec devops-app-app-1 node seed.js
+```
 
 ---
 
@@ -613,6 +636,7 @@ Base URL: `http://localhost:8000/api`
 | v2.0 | — | Full DevOps overhaul — Docker, CI/CD, bug fixes, ₹ currency, UX improvements, seed data, security fixes |
 | v3.0 | 2026 | Real dataset images (Kaggle Apparel Dataset), 25 products across 4 categories, fixed product card alignment, uniform image grid, image copy automation script, detailed README |
 | v4.0 | 2026 | Jenkins moved to Docker container, custom Dockerfile.jenkins with Node.js + Docker CLI + docker-compose, fixed project name in docker-compose, .dockerignore added, app running on port 8002 |
+| v4.1 | 2026 | Fixed MongoDB connection (removed deprecated useCreateIndex), fixed REACT_APP_API_URL build arg in Docker, fixed seed.js, added Quick Start guide for any device |
 
 ---
 
