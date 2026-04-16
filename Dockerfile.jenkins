@@ -1,17 +1,23 @@
+# Custom Jenkins image based on the official LTS release
+# Adds Node.js 18, Docker CLI, and docker-compose so Jenkins pipelines
+# can build and deploy Docker images directly from the container
+
 FROM jenkins/jenkins:lts
 
+# Switch to root to install system packages
 USER root
 
-# Install Node.js 18
+# Install Node.js 18 (used by pipeline stages: npm install, npm run build, npm test)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
-# Install latest Docker CLI
+# Install the latest Docker CLI so Jenkins can run `docker build` and `docker push`
 RUN curl -fsSL https://get.docker.com | sh
 
-# Install latest docker-compose
+# Install the latest docker-compose binary for `docker compose up` commands in pipelines
 RUN curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" \
     -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
+# Drop back to the jenkins user for security (least privilege)
 USER jenkins

@@ -1,19 +1,27 @@
+// seed.js — Database Seeder Script
+// Clears existing categories and products, then inserts fresh demo data
+// Run with: node seed.js (from the server/ directory)
+// WARNING: This will DELETE all existing categories and products!
+
 require("dotenv").config();
 const mongoose = require("mongoose");
 const categoryModel = require("./models/categories");
 const productModel = require("./models/products");
 
 const seed = async () => {
+  // Connect to MongoDB using DATABASE env var from .env
   await mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   console.log("Connected to MongoDB");
 
+  // Clear existing data before seeding
   await categoryModel.deleteMany({});
   await productModel.deleteMany({});
   console.log("Cleared categories and products");
 
+  // Insert 3 demo categories: Men, Women, Kids
   const categories = await categoryModel.insertMany([
     { cName: "Men",   cDescription: "Men's clothing and accessories", cImage: "men.jpg",   cStatus: "Active" },
     { cName: "Women", cDescription: "Women's clothing and accessories", cImage: "women.jpg", cStatus: "Active" },
@@ -22,6 +30,7 @@ const seed = async () => {
 
   const [men, women, kids] = categories;
 
+  // Demo products — each product requires exactly 2 images (see copyImages.js or generateImages.js)
   const products = [
     // ── Men Shirts ──────────────────────────────────────────────────────────
     { pName: "White Cotton Shirt",  pDescription: "Classic white cotton shirt, perfect for formal and casual wear.", pPrice: 799,  pQuantity: 50, pCategory: men._id,   pImages: ["p_men_shirt_white_1.jpg",  "p_men_shirt_white_2.jpg"],  pOffer: "10", pStatus: "Active" },
@@ -56,6 +65,7 @@ const seed = async () => {
   process.exit(0);
 };
 
+// Run the seed function and exit with error code if it fails
 seed().catch((err) => {
   console.error("Seed failed:", err.message);
   process.exit(1);
