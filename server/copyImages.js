@@ -1,27 +1,38 @@
+// copyImages.js — Local Image Copy Script
+// Copies product and category images from a local dataset folder into the uploads directory
+// Use this if you have a local image dataset (e.g. downloaded from Kaggle)
+// Alternative: use generateImages.js to download images from Unsplash URLs
+
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
+// Source dataset folder (update this path to match your local dataset location)
 const DATASET = path.join(os.homedir(), "Downloads", "archive (5)");
+
+// Destination folders where the app serves images from
 const DEST_PRODUCTS  = path.join(__dirname, "public/uploads/products");
 const DEST_CATEGORIES = path.join(__dirname, "public/uploads/categories");
 
+// Reads up to `count` image files from a subfolder of the dataset
 function getImages(folder, count = 2) {
   const dir = path.join(DATASET, folder);
   if (!fs.existsSync(dir)) { console.error(`❌ Not found: ${folder}`); return []; }
   return fs.readdirSync(dir)
-    .filter(f => /\.(jpg|jpeg|png)$/i.test(f))
+    .filter(f => /\.(jpg|jpeg|png)$/i.test(f))  // Only image files
     .slice(0, count)
     .map(f => path.join(dir, f));
 }
 
+// Copies a single file to the destination directory with a new name
 function copy(src, destName, destDir) {
   if (!src) return;
   fs.copyFileSync(src, path.join(destDir, destName));
   console.log(`✅ ${path.basename(src)}  →  ${destName}`);
 }
 
-// ── Products (2 images each, flat into products folder) ──────────────────────
+// Mapping: [datasetSubfolder, destName1, destName2]
+// Each product needs exactly 2 images matching the filenames used in seed.js
 const map = [
   // Men Shirts
   ["white_shirt",  "p_men_shirt_white_1.jpg",   "p_men_shirt_white_2.jpg"],
@@ -48,13 +59,14 @@ const map = [
   ["white_dress",  "p_women_dress_white_1.jpg", "p_women_dress_white_2.jpg"],
 ];
 
+// Copy 2 product images for each entry in the map
 for (const [folder, name1, name2] of map) {
   const imgs = getImages(folder, 2);
   copy(imgs[0], name1, DEST_PRODUCTS);
   copy(imgs[1], name2, DEST_PRODUCTS);
 }
 
-// ── Categories ────────────────────────────────────────────────────────────────
+// Copy 1 representative image for each category
 copy(getImages("blue_shirt",  1)[0], "men.jpg",   DEST_CATEGORIES);
 copy(getImages("red_dress",   1)[0], "women.jpg", DEST_CATEGORIES);
 copy(getImages("blue_shorts", 1)[0], "kids.jpg",  DEST_CATEGORIES);

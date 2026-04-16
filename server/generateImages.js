@@ -1,7 +1,13 @@
+// generateImages.js — Image Download Script
+// Downloads product and category images from Unsplash URLs into the uploads folder
+// Use this when you don't have a local dataset (alternative to copyImages.js)
+// Run with: node generateImages.js (from the server/ directory)
+
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
+// List of images to download: each entry has a local destination path and a source URL
 const images = [
   // ── Categories ──────────────────────────────────────────────────────────────
   { file: "public/uploads/categories/men.jpg",
@@ -74,12 +80,15 @@ const images = [
     url:  "https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?w=600&q=80" },   // silk roll
 ];
 
+// Downloads a single image from a URL to a local file path
+// Handles HTTP redirects (301/302) automatically
 function download(url, dest) {
   return new Promise((resolve, reject) => {
     const filePath = path.join(__dirname, dest);
     const file = fs.createWriteStream(filePath);
     const get = (u) => {
       https.get(u, (res) => {
+        // Follow redirects
         if (res.statusCode === 301 || res.statusCode === 302) {
           file.close();
           return get(res.headers.location);
@@ -97,6 +106,7 @@ function download(url, dest) {
   });
 }
 
+// Download all images sequentially (avoids overwhelming the server with parallel requests)
 (async () => {
   console.log(`Downloading ${images.length} images...\n`);
   for (const img of images) {
