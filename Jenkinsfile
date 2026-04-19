@@ -11,6 +11,12 @@ pipeline {
 
     stages {
 
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         // Install React frontend npm packages (reads root package.json)
         stage('Install Frontend Dependencies') {
             steps {
