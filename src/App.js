@@ -19,8 +19,6 @@ function App() {
             </LayoutContext.Provider>
         </Fragment>
     );
-
-console.log("Krutik change");
 }
 
 export default App;
