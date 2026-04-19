@@ -39,11 +39,11 @@ services:
       - "8002:8000"                     # App server → host:8002
     environment:
       - PORT=8000                       # Express listens on this port inside container
-      - DATABASE=mongodb://mongo:27017/ecommerce  # MongoDB connection string (uses service name)
-      - JWT_SECRET=demo_jwt_secret      # Secret key for signing JWT tokens
-      - BRAINTREE_MERCHANT_ID=demo_merchant_id    # Braintree sandbox credentials
-      - BRAINTREE_PUBLIC_KEY=demo_public_key
-      - BRAINTREE_PRIVATE_KEY=demo_private_key
+      - DATABASE=${DATABASE}
+      - JWT_SECRET=${JWT_SECRET}
+      - BRAINTREE_MERCHANT_ID=${BRAINTREE_MERCHANT_ID}
+      - BRAINTREE_PUBLIC_KEY=${BRAINTREE_PUBLIC_KEY}
+      - BRAINTREE_PRIVATE_KEY=${BRAINTREE_PRIVATE_KEY}
     depends_on:
       - mongo                           # Wait for mongo to start before launching app
     restart: unless-stopped
