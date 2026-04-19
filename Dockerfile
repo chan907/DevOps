@@ -12,9 +12,9 @@ RUN npm install
 
 # Copy all source files and build the React app
 COPY . .
-ARG REACT_APP_API_URL=          # Optional: pass backend API URL at build time
+ARG REACT_APP_API_URL=
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
-RUN npm run build               # Outputs static files to /app/build
+RUN npm run build
 
 # ── Stage 2: Production Node.js Server ──────────────────────────────────────
 FROM node:18-alpine
@@ -31,5 +31,5 @@ COPY server/ .
 # Express will serve these static files
 COPY --from=frontend-build /app/build ./public
 
-EXPOSE 8000                     # The port Express listens on (mapped in docker-compose)
-CMD ["node", "app.js"]          # Start the Express server
+EXPOSE 8000
+CMD ["node", "app.js"]
