@@ -70,8 +70,7 @@ pipeline {
             sh 'docker compose logs app || true'  // || true prevents error if container doesn't exist
         }
 
-        // Clean the Jenkins workspace after the build (free up disk space)
-        // Runs AFTER all stages are done, not before
+        // Always clean the Jenkins workspace after the build (free up disk space)
         always {
             cleanWs()
         }
