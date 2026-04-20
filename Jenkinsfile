@@ -11,12 +11,6 @@ pipeline {
 
     stages {
 
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
         // Install React frontend npm packages (reads root package.json)
         stage('Install Frontend Dependencies') {
             steps {
@@ -76,7 +70,8 @@ pipeline {
             sh 'docker compose logs app || true'  // || true prevents error if container doesn't exist
         }
 
-        // Always clean the Jenkins workspace after the build (free up disk space)
+        // Clean the Jenkins workspace after the build (free up disk space)
+        // Runs AFTER all stages are done, not before
         always {
             cleanWs()
         }
