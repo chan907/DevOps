@@ -1,43 +1,10 @@
 import React, { Fragment, useEffect, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 import OrderSuccessMessage from "./OrderSuccessMessage";
 import { HomeContext } from "./";
 import { sliderImages } from "../../admin/dashboardAdmin/Action";
 import { prevSlide, nextSlide } from "./Mixins";
 
 const apiURL = process.env.REACT_APP_API_URL;
-
-const HeroBanner = () => {
-  const history = useHistory();
-  return (
-    <div className="relative mt-16 bg-gray-900 overflow-hidden" style={{ minHeight: "420px" }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-yellow-900 opacity-90" />
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 py-24">
-        <span className="text-yellow-400 text-sm font-semibold uppercase tracking-widest mb-3">New Collection 2026</span>
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
-          Style That <span className="text-yellow-400">Speaks</span>
-        </h1>
-        <p className="text-gray-300 text-lg mb-8 max-w-xl">
-          Discover premium clothing — shirts, dresses, pants, shoes and more. Quality you can feel.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={() => { const el = document.getElementById("shop"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
-            className="px-8 py-3 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold rounded-xl transition"
-          >
-            Shop Now
-          </button>
-          <button
-            onClick={() => history.push("/")}
-            className="px-8 py-3 border border-white text-white hover:bg-white hover:text-gray-900 font-bold rounded-xl transition"
-          >
-            View Categories
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Slider = () => {
   const { data, dispatch } = useContext(HomeContext);
@@ -94,9 +61,7 @@ const Slider = () => {
             </a>
           </div>
         </div>
-      ) : (
-        <HeroBanner />
-      )}
+      ) : null}
       <OrderSuccessMessage />
     </Fragment>
   );
