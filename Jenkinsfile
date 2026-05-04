@@ -3,26 +3,23 @@ pipeline {
 
     stages {
 
-        stage('Build Docker Images') {
+        stage('Checkout Code') {
             steps {
-                sh '''
-                docker compose down --remove-orphans
-                docker compose build --no-cache
-                '''
+                git branch: 'new-branch-name',
+                    url: 'https://github.com/chan907/DevOps.git'
             }
         }
 
-        stage('Run Containers') {
+        stage('Deploy') {
             steps {
                 sh '''
-                docker compose up -d
-                '''
-            }
-        }
+                docker --version
+                docker-compose --version
 
-        stage('Check Running Containers') {
-            steps {
-                sh '''
+                docker-compose down --remove-orphans
+                docker-compose build --no-cache
+                docker-compose up -d
+
                 docker ps
                 '''
             }
