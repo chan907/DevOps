@@ -1,7 +1,3 @@
-// User Model
-// Represents a registered user (customer or admin) in the database
-// userRole: 0 = customer, 1 = admin
-
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -9,44 +5,44 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      maxlength: 32,              // Limit display name length
+      maxlength: 32,
     },
     email: {
       type: String,
       required: true,
       trim: true,
-      index: { unique: true },   // Prevent duplicate accounts with same email
+      index: { unique: true },
       match: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
     },
     password: {
       type: String,
-      required: true,            // Stored as bcrypt hash, never plain text
+      required: true,
     },
     userRole: {
       type: Number,
-      required: true,            // 0 = customer, 1 = admin
+      required: true,
     },
     phoneNumber: {
-      type: Number,              // Optional contact number
+      type: Number,
     },
     userImage: {
       type: String,
-      default: "user.png",       // Default avatar filename
+      default: "user.png",
     },
     verified: {
       type: String,
-      default: false,            // Email verification flag (not yet implemented)
+      default: false,
     },
     secretKey: {
       type: String,
-      default: null,             // Reserved for future use (e.g. password reset token)
+      default: null,
     },
     history: {
       type: Array,
-      default: [],               // Order/browsing history (stored as array of IDs)
+      default: [],
     },
   },
-  { timestamps: true }           // Adds createdAt and updatedAt fields automatically
+  { timestamps: true }
 );
 
 const userModel = mongoose.model("users", userSchema);
