@@ -1,75 +1,134 @@
-// User Controller
-// Handles user profile retrieval, profile editing, and password changes
-// Admin can view all users; individual users manage their own profiles
-
 const userModel = require("../models/users");
 const bcrypt = require("bcryptjs");
 
 class User {
-
-  // GET /api/user/all-user — Returns all users sorted newest first (admin use)
   async getAllUser(req, res) {
     try {
-      const Users = await userModel.find({}).sort({ _id: -1 });
-      return res.json({ Users });
+      let Users = await userModel
+        .find({})
+        .populate("allProduct.id", "pName pImages pPrice")
+        .populate("user", "name email")
+        .sort({ _id: -1 });
+      if (Users) {
+        return res.json({ Users });
+      }
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      console.log(err);
     }
   }
 
-  // POST /api/user/single-user — Returns profile info for a specific user
-  // Only returns safe fields (excludes password, role, secretKey)
   async getSingleUser(req, res) {
-    const { uId } = req.body;
-    if (!uId) return res.json({ error: "All fields are required" });
-    try {
-      const User = await userModel
-        .findById(uId)
-        .select("name email phoneNumber userImage updatedAt createdAt");
-      if (User) return res.json({ User });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
+    let { uId } = req.body;
+    if (!uId) {
+      return res.json({ error: "All filled must be required" });
+    } else {
+      try {
+        let User = await userModel
+          .findById(uId)
+          .select("name email phoneNumber userImage updatedAt createdAt");
+        if (User) {
+          return res.json({ User });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
-  // POST /api/user/edit-user — Updates user's name and phone number
+  async postAddUser(req, res) {
+    let { allProduct, user, amount, transactionId, address, phone } = req.body;
+    if (
+      !allProduct ||
+      !user ||
+      !amount ||
+      !transactionId ||
+      !address ||
+      !phone
+    ) {
+      return res.json({ message: "All filled must be required" });
+    } else {
+      try {
+        let newUser = new userModel({
+          allProduct,
+          user,
+          amount,
+          transactionId,
+          address,
+          phone,
+        });
+        let save = await newUser.save();
+        if (save) {
+          return res.json({ success: "User created successfully" });
+        }
+      } catch (err) {
+        return res.json({ error: error });
+      }
+    }
+  }
+
   async postEditUser(req, res) {
-    const { uId, name, phoneNumber } = req.body;
+    let { uId, name, phoneNumber } = req.body;
     if (!uId || !name || !phoneNumber) {
-      return res.json({ error: "All fields are required" });
-    }
-    try {
-      await userModel.findByIdAndUpdate(uId, { name, phoneNumber, updatedAt: Date.now() });
-      return res.json({ success: "Profile updated successfully" });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
+      return res.json({ message: "All filled must be required" });
+    } else {
+      let currentUser = userModel.findByIdAndUpdate(uId, {
+        name: name,
+        phoneNumber: phoneNumber,
+        updatedAt: Date.now(),
+      });
+      currentUser.exec((err, result) => {
+        if (err) console.log(err);
+        return res.json({ success: "User updated successfully" });
+      });
     }
   }
 
-  // POST /api/user/change-password — Changes user's password after verifying old password
-  // Old password is compared against the stored bcrypt hash before updating
-  async changePassword(req, res) {
-    const { uId, oldPassword, newPassword } = req.body;
-    if (!uId || !oldPassword || !newPassword) {
-      return res.json({ error: "All fields are required" });
+  async getDeleteUser(req, res) {
+    let { oId, status } = req.body;
+    if (!oId || !status) {
+      return res.json({ message: "All filled must be required" });
+    } else {
+      let currentUser = userModel.findByIdAndUpdate(oId, {
+        status: status,
+        updatedAt: Date.now(),
+      });
+      currentUser.exec((err, result) => {
+        if (err) console.log(err);
+        return res.json({ success: "User updated successfully" });
+      });
     }
-    try {
-      const data = await userModel.findById(uId);
-      if (!data) return res.json({ error: "Invalid user" });
+  }
 
-      // Verify old password matches the stored hash
-      const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
-      if (!oldPassCheck) return res.json({ error: "Your old password is incorrect" });
-
-      // Hash the new password and save
-      const hashed = bcrypt.hashSync(newPassword, 10);
-      await userModel.findByIdAndUpdate(uId, { password: hashed });
-      return res.json({ success: "Password updated successfully" });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
+  async changePassword(req, res) {
+    let { uId, oldPassword, newPassword } = req.body;
+    if (!uId || !oldPassword || !newPassword) {
+      return res.json({ message: "All filled must be required" });
+    } else {
+      const data = await userModel.findOne({ _id: uId });
+      if (!data) {
+        return res.json({
+          error: "Invalid user",
+        });
+      } else {
+        const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
+        if (oldPassCheck) {
+          newPassword = bcrypt.hashSync(newPassword, 10);
+          let passChange = userModel.findByIdAndUpdate(uId, {
+            password: newPassword,
+          });
+          passChange.exec((err, result) => {
+            if (err) console.log(err);
+            return res.json({ success: "Password updated successfully" });
+          });
+        } else {
+          return res.json({
+            error: "Your old password is wrong!!",
+          });
+        }
+      }
     }
   }
 }
 
-const usersController = new User();
-module.exports = usersController;
+const ordersController = new User();
+module.exports = ordersController;

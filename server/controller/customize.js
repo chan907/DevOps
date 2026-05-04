@@ -1,6 +1,3 @@
-// Customize Controller
-// Manages homepage slider images and provides dashboard statistics for the admin panel
-
 const fs = require("fs");
 const categoryModel = require("../models/categories");
 const productModel = require("../models/products");
@@ -9,9 +6,6 @@ const userModel = require("../models/users");
 const customizeModel = require("../models/customize");
 
 class Customize {
-
-  // GET /api/customize/get-slide-image
-  // Returns all slider images stored in the database (shown in homepage carousel)
   async getImages(req, res) {
     try {
       let Images = await customizeModel.find({});
@@ -23,10 +17,8 @@ class Customize {
     }
   }
 
-  // POST /api/customize/upload-slide-image
-  // Saves a new slider image uploaded by the admin via multer
   async uploadSlideImage(req, res) {
-    let image = req.file.filename;  // Filename assigned by multer (timestamp_originalname)
+    let image = req.file.filename;
     if (!image) {
       return res.json({ error: "All field required" });
     }
@@ -43,8 +35,6 @@ class Customize {
     }
   }
 
-  // POST /api/customize/delete-slide-image
-  // Deletes a slider image from the database and removes the file from disk
   async deleteSlideImage(req, res) {
     let { id } = req.body;
     if (!id) {
@@ -56,7 +46,7 @@ class Customize {
 
         let deleteImage = await customizeModel.findByIdAndDelete(id);
         if (deleteImage) {
-          // Remove the image file from the uploads/customize folder
+          // Delete Image from uploads -> customizes folder
           fs.unlink(filePath, (err) => {
             if (err) {
               console.log(err);
@@ -70,9 +60,6 @@ class Customize {
     }
   }
 
-  // POST /api/customize/dashboard-data
-  // Returns total counts of categories, products, orders, and users
-  // Used to populate the admin dashboard summary cards
   async getAllData(req, res) {
     try {
       let Categories = await categoryModel.find({}).count();

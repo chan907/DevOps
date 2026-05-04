@@ -1,16 +1,21 @@
-// Order Routes
-// Base path: /api/order
-// Handles order lifecycle: create → view → update status → delete
-
 const express = require("express");
 const router = express.Router();
+
 const ordersController = require("../controller/orders");
 
-router.get("/get-all-orders", ordersController.getAllOrders);       // Admin: get all orders
-router.post("/order-by-user", ordersController.getOrderByUser);     // User: get their own orders
+// CREATE ORDER
+router.post("/place-order", ordersController.postCreateOrder);
 
-router.post("/create-order", ordersController.postCreateOrder);     // Create order after payment
-router.post("/update-order", ordersController.postUpdateOrder);     // Admin: update order status
-router.post("/delete-order", ordersController.postDeleteOrder);     // Admin: delete an order
+// GET ALL ORDERS
+router.get("/get-all-orders", ordersController.getAllOrders);
+
+// USER ORDERS
+router.post("/get-order-by-user",ordersController.getOrderByUser);
+
+// UPDATE ORDER
+router.post("/update-order", ordersController.postUpdateOrder);
+
+// DELETE ORDER
+router.post("/delete-order", ordersController.postDeleteOrder);
 
 module.exports = router;
