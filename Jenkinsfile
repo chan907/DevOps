@@ -2,38 +2,29 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone') {
+        stage('Checkout Code') {
             steps {
-                git 'https://github.com/chan907/DevOps.git'
+                git branch: 'new-branch-name', url: 'https://github.com/chan907/DevOps.git'
             }
         }
 
-        stage('Install Server Dependencies') {
+        stage('Deploy') {
             steps {
-                dir('server') {
-                    sh 'npm install'
-                }
+                sh '''
+                docker-compose down --remove-orphans
+                docker-compose build --no-cache
+                docker-compose up -d
+                '''
             }
         }
+    }
 
-        stage('Install Client Dependencies') {
-            steps {
-                dir('client') {
-                    sh 'npm install'
-                }
-            }
+    post {
+        success {
+            echo '✅ Deployment Successful!'
         }
-
-        stage('Build Docker Images') {
-            steps {
-                sh 'docker-compose build'
-            }
-        }
-
-        stage('Run Containers') {
-            steps {
-                sh 'docker-compose up -d'
-            }
+        failure {
+            echo '❌ Deployment Failed!'
         }
     }
 }
