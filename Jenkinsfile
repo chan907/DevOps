@@ -12,9 +12,15 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker-compose down --remove-orphans
-                docker-compose build --no-cache
-                docker-compose up -d
+                echo "🚀 Starting Deployment..."
+
+                /opt/homebrew/bin/docker-compose down --remove-orphans
+
+                /opt/homebrew/bin/docker-compose build --no-cache
+
+                /opt/homebrew/bin/docker-compose up -d
+
+                echo "✅ Deployment Completed!"
                 '''
             }
         }
