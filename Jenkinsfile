@@ -12,11 +12,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                export PATH=$PATH:/usr/bin
-
-                /usr/bin/docker-compose down --remove-orphans
-                /usr/bin/docker-compose build --no-cache
-                /usr/bin/docker-compose up -d
+                docker-compose down --remove-orphans
+                docker-compose build --no-cache
+                docker-compose up -d
                 '''
             }
         }
